@@ -1,0 +1,670 @@
+/* ============================================================
+   WeatherNow — design system
+   Glassmorphism on an animated, weather-reactive gradient.
+   ============================================================ */
+
+.app {
+  position: relative;
+  min-height: 100vh;
+  background-size: 200% 200% !important;
+  animation: drift 24s ease infinite;
+  overflow-x: hidden;
+  transition: background 0.8s ease;
+}
+
+@keyframes drift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Soft vignette to keep glass cards legible over any gradient. */
+.app__overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.08), transparent 60%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.28));
+  pointer-events: none;
+}
+
+.shell {
+  position: relative;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 48px) clamp(16px, 4vw, 32px) 48px;
+}
+
+/* ---------- Masthead ---------- */
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand__mark {
+  font-size: 40px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+}
+
+.brand__name {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand__tag {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* ---------- Unit toggle ---------- */
+.unit-toggle {
+  display: inline-flex;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  padding: 4px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.unit-toggle__btn {
+  border: none;
+  background: transparent;
+  color: var(--text-soft);
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.unit-toggle__btn.is-active {
+  background: var(--accent);
+  color: #1e3a5f;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Search ---------- */
+.searchbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.searchbar__field {
+  position: relative;
+  flex: 1 1 240px;
+  display: flex;
+  align-items: center;
+}
+
+.searchbar__icon {
+  position: absolute;
+  left: 16px;
+  font-size: 18px;
+  color: var(--text-dim);
+  pointer-events: none;
+}
+
+.searchbar input {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.searchbar input::placeholder {
+  color: var(--text-dim);
+}
+
+.searchbar input:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: var(--glass-strong);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 0 18px;
+  height: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #1e3a5f;
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--ghost {
+  background: var(--glass-bg);
+  color: var(--text);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--glass-strong);
+}
+
+/* ---------- Recent chips ---------- */
+.recents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.chip {
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-soft);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.chip:hover {
+  background: var(--glass-strong);
+  color: var(--text);
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(20px, 3vw, 28px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+.card__title {
+  margin: 0 0 18px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+/* ---------- Dashboard grid ---------- */
+.dashboard {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  animation: rise 0.5s ease both;
+}
+
+.dashboard__side {
+  display: flex;
+}
+
+.dashboard__side > * {
+  width: 100%;
+}
+
+.dashboard__full {
+  grid-column: 1 / -1;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Current weather ---------- */
+.current__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.current__place {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.current__country {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dim);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 1px 7px;
+}
+
+.current__date {
+  margin: 4px 0 0;
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+.current__glyph {
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.current__temp-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 8px 0 24px;
+}
+
+.current__temp {
+  font-size: clamp(56px, 11vw, 88px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.current__desc {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.current__feels {
+  margin: 4px 0 0;
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+/* Stat grid */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+
+.stat__icon {
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  color: var(--text-soft);
+  flex-shrink: 0;
+}
+
+.stat__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.stat__value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.stat__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+/* ---------- Forecast ---------- */
+.forecast__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.forecast__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  padding: 16px 8px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.forecast__card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.forecast__day {
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.forecast__cond {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.forecast__temps {
+  margin: 4px 0 0;
+  display: flex;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.forecast__max { font-weight: 700; }
+.forecast__min { color: var(--text-dim); }
+
+/* ---------- Air quality ---------- */
+.air__main {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.gauge {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  flex-shrink: 0;
+}
+
+.gauge__svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge__track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 14;
+}
+
+.gauge__fill {
+  fill: none;
+  stroke-width: 14;
+  transition: stroke-dasharray 0.9s cubic-bezier(0.22, 1, 0.36, 1), stroke 0.4s ease;
+}
+
+.gauge__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge__value {
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.gauge__unit {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+.air__summary {
+  flex: 1 1 180px;
+}
+
+.air__badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.air__message {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.air__dominant {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.air__pollutants {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.pollutant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 10px 6px;
+}
+
+.pollutant__label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.pollutant__value {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.air__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.air--empty .air__none {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+/* ---------- State messages ---------- */
+.state-message {
+  text-align: center;
+  padding: 60px 24px;
+  animation: rise 0.4s ease both;
+}
+
+.state-message__icon {
+  font-size: 56px;
+  display: inline-flex;
+  color: var(--text-soft);
+  margin-bottom: 12px;
+}
+
+.state-message--error .state-message__icon {
+  color: #fecaca;
+}
+
+.state-message__title {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.state-message__text {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.inline-error {
+  background: rgba(248, 113, 113, 0.18);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #fee2e2;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+/* ---------- Skeleton ---------- */
+.skeleton {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+}
+
+.sk-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sk {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.08) 25%,
+    rgba(255, 255, 255, 0.18) 37%,
+    rgba(255, 255, 255, 0.08) 63%
+  );
+  background-size: 400% 100%;
+  border-radius: 8px;
+  animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.sk-line { height: 16px; margin-bottom: 12px; }
+.sk-line--lg { width: 55%; height: 28px; }
+.sk-line--sm { width: 35%; }
+.sk-temp { width: 45%; height: 72px; margin: 16px 0 24px; }
+.sk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.sk-grid--row { grid-template-columns: repeat(5, 1fr); }
+.sk-tile { height: 56px; }
+.sk-gauge { height: 150px; border-radius: 16px; }
+
+/* ---------- Footer ---------- */
+.footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.footer a {
+  text-decoration: none;
+  border-bottom: 1px dotted var(--text-dim);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+  .dashboard,
+  .skeleton {
+    grid-template-columns: 1fr;
+  }
+
+  .forecast__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sk-grid--row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .btn__label {
+    display: none;
+  }
+
+  .btn--ghost {
+    padding: 0 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .forecast__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
