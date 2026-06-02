@@ -1,8 +1,8 @@
 {
-  "name": "weathernow",
+  "name": "skyline",
   "version": "1.0.0",
   "private": true,
-  "description": "WeatherNow — a unified weather & air-quality dashboard built with React.",
+  "description": "Skyline — a unified weather & air-quality dashboard built with React.",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

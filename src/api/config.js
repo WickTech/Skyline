@@ -7,7 +7,7 @@ export const WAQI_TOKEN = process.env.REACT_APP_WAQI_TOKEN || '';
 if (!OPENWEATHER_KEY || !WAQI_TOKEN) {
   // eslint-disable-next-line no-console
   console.warn(
-    '[WeatherNow] Missing API keys. Copy .env.example to .env and set ' +
+    '[Skyline] Missing API keys. Copy .env.example to .env and set ' +
       'REACT_APP_OPENWEATHER_KEY and REACT_APP_WAQI_TOKEN.'
   );
 }

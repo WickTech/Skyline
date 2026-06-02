@@ -10,8 +10,8 @@ import { useEnvironment } from './hooks/useEnvironment';
 import { themeForIcon, gradientCss } from './utils/theme';
 import './App.css';
 
-const UNIT_KEY = 'weathernow:unit';
-const RECENTS_KEY = 'weathernow:recents';
+const UNIT_KEY = 'skyline:unit';
+const RECENTS_KEY = 'skyline:recents';
 const DEFAULT_CITY = 'London';
 
 function App() {
@@ -91,7 +91,7 @@ function App() {
           <div className="brand">
             <span className="brand__mark" aria-hidden="true">⛅</span>
             <div>
-              <h1 className="brand__name">WeatherNow</h1>
+              <h1 className="brand__name">Skyline</h1>
               <p className="brand__tag">Weather &amp; air quality, in one search</p>
             </div>
           </div>

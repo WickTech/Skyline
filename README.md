@@ -1,11 +1,11 @@
-# WeatherNow ⛅
+# Skyline 🌤️
 
 A single-search **weather & air-quality dashboard** built with React. Type a city
-once and WeatherNow resolves it to coordinates, then pulls **current conditions**,
+once and Skyline resolves it to coordinates, then pulls **current conditions**,
 a **5-day forecast**, and the **air quality index** for that exact spot — all on a
 glassmorphic UI whose background reacts to the live weather.
 
-> WeatherNow merges two earlier projects (WeatherNow + AirNow) into one product.
+> Skyline merges two earlier projects (WeatherNow + AirNow) into one product.
 > One lookup now answers both *"what's it like outside?"* and *"is the air clean?"*.
 
 ## Features
@@ -28,8 +28,8 @@ glassmorphic UI whose background reacts to the live weather.
 ## Getting started
 
 ```bash
-git clone https://github.com/WickTech/weathernow.git
-cd weathernow
+git clone https://github.com/WickTech/skyline.git
+cd skyline
 npm install
 
 # configure your API keys
