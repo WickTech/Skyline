@@ -18,6 +18,20 @@ function Recenter({ lat, lon }) {
   return null;
 }
 
+// The map's container can resize after mount — e.g. when the async air-quality
+// data grows the column beside it on wide screens, or on viewport changes.
+// Leaflet needs an explicit invalidateSize() to repaint tiles into the new box.
+function AutoResize() {
+  const map = useMap();
+  useEffect(() => {
+    const el = map.getContainer();
+    const ro = new ResizeObserver(() => map.invalidateSize());
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [map]);
+  return null;
+}
+
 const OVERLAYS = [
   { key: 'radar', label: 'Radar' },
   ...Object.entries(OWM_LAYERS).map(([key, { label }]) => ({ key, label })),
@@ -73,6 +87,7 @@ const WeatherMap = ({ lat, lon }) => {
           />
           {overlayUrl ? <TileLayer key={active} url={overlayUrl} opacity={0.6} /> : null}
           <Recenter lat={lat} lon={lon} />
+          <AutoResize />
         </MapContainer>
       </div>
     </section>

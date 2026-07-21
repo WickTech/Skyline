@@ -233,13 +233,18 @@
 /* ---------- Dashboard grid ---------- */
 .dashboard {
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
+  grid-template-columns: 1fr; /* mobile-first: single column stack */
   gap: 20px;
   /* Don't stretch each card to the tallest in its row: the current-weather
      card must keep its natural height when the async air-quality / UV data
-     lands in the side column and changes that column's height. */
+     lands beside it and changes the other column's height. */
   align-items: start;
   animation: rise 0.5s ease both;
+}
+
+/* Direct children are the cards themselves now (no wrapper divs). */
+.dashboard > * {
+  min-width: 0;
 }
 
 .dashboard__side {
@@ -1152,23 +1157,41 @@
   font-size: clamp(52px, 12vw, 84px);
 }
 
-/* On very wide screens the single hero card can get too airy — cap its reading
-   width a touch by letting the side column take a bit more room. */
+/* Wide screens: two columns. Left stack = current → air quality → UV; the map
+   sits beside them in the right column, spanning their full height. Hourly and
+   the 5-day forecast span the full width underneath. */
 @media (min-width: 1000px) {
   .dashboard {
-    grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr);
+    grid-template-areas:
+      'current  map'
+      'air      map'
+      'uv       map'
+      'hourly   hourly'
+      'forecast forecast';
   }
-}
+  .dashboard > .current { grid-area: current; }
+  .dashboard > .air { grid-area: air; }
+  .dashboard > .uv { grid-area: uv; }
+  .dashboard > .hourly { grid-area: hourly; }
+  .dashboard > .forecast { grid-area: forecast; }
 
-/* Tablet: keep two columns but even them out before the phone breakpoint. */
-@media (max-width: 900px) and (min-width: 761px) {
-  .dashboard {
-    grid-template-columns: 1.3fr 1fr;
+  /* Map fills the tall right column beside the left stack. */
+  .dashboard > .map {
+    grid-area: map;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 20px;
+  }
+  .dashboard > .map .map__canvas {
+    flex: 1;
+    min-height: 360px;
   }
 }
 
 /* Prevent any accidental horizontal overflow on small screens. */
-.dashboard,
 .card,
 .hourly__track {
   min-width: 0;
