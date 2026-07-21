@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { OWM_LAYERS, owmTileUrl, getRainviewerTileUrl } from '../api/maps';
 
@@ -64,8 +64,12 @@ const WeatherMap = ({ lat, lon }) => {
           center={[lat, lon]}
           zoom={7}
           scrollWheelZoom={false}
+          /* Default zoom buttons sit top-left, where the layer pill lives —
+             move them to the bottom-right so the two never overlap. */
+          zoomControl={false}
           style={{ height: '100%', width: '100%' }}
         >
+          <ZoomControl position="bottomright" />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

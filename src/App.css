@@ -513,7 +513,8 @@
   margin: 20px 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* Fits the 7 pollutants into 2 rows rather than 3 with a lone tile trailing. */
+  grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
   gap: 10px;
 }
 
@@ -1218,12 +1219,17 @@
 @media (min-width: 900px) {
   .dashboard {
     grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr);
+    /* Air quality is the tallest card, so it spans both rows on the right while
+       the shorter current + UV cards stack on the left. That balances the two
+       columns — pairing current with air quality instead left a large gap under
+       the current card. */
     grid-template-areas:
       'current  air'
-      'current  uv'
+      'uv       air'
       'map      map'
       'hourly   hourly'
       'forecast forecast';
+    grid-template-rows: auto auto auto auto auto;
   }
   .dashboard > .current { grid-area: current; }
   .dashboard > .air { grid-area: air; }
