@@ -152,21 +152,16 @@ function App() {
 
             <Alerts alerts={alerts} />
 
+            {/* Grid order: current + air/UV on the left, map beside them on wide
+                screens; on narrow screens everything stacks with the map right
+                under the current card. Hourly + 5-day span full width last. */}
             <div className="dashboard">
               <CurrentWeather weather={weather} unit={unit} />
-              <div className="dashboard__side">
-                <AirQuality airQuality={airQuality} />
-                <UvIndex uv={uv} />
-              </div>
-              <div className="dashboard__full">
-                {coord && <WeatherMap lat={coord.lat} lon={coord.lon} />}
-              </div>
-              <div className="dashboard__full">
-                <Hourly hourly={hourly} unit={unit} />
-              </div>
-              <div className="dashboard__full">
-                <Forecast forecast={forecast} unit={unit} />
-              </div>
+              {coord && <WeatherMap lat={coord.lat} lon={coord.lon} />}
+              <AirQuality airQuality={airQuality} />
+              <UvIndex uv={uv} />
+              <Hourly hourly={hourly} unit={unit} />
+              <Forecast forecast={forecast} unit={unit} />
             </div>
           </>
         )}
