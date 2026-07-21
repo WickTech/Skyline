@@ -635,7 +635,7 @@
 .sk-gauge { height: 150px; border-radius: 16px; }
 .sk-uv { height: 60px; border-radius: 12px; }
 .sk-full { grid-column: 1 / -1; }
-.sk-map { height: 380px; border-radius: 16px; }
+.sk-map { height: clamp(280px, 34vh, 400px); border-radius: 16px; }
 
 /* ---------- Footer ---------- */
 .footer {
@@ -676,7 +676,7 @@
   /* A shorter map reads better on a phone and reserves less scroll. */
   .map__canvas,
   .sk-map {
-    height: 300px;
+    height: 260px;
   }
 }
 
@@ -727,10 +727,6 @@
   }
   .air__badge {
     margin-inline: auto;
-  }
-
-  .map__head {
-    align-items: flex-start;
   }
 }
 
@@ -950,35 +946,97 @@
 }
 
 /* ---------- Weather map ---------- */
-.map__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.map__head .card__title {
-  margin: 0;
-}
-
-.map__layers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
+/* Landscape band: wide enough to read, never taller than it needs to be. */
 .map__canvas {
-  height: 380px;
-  border-radius: var(--radius-lg);
+  position: relative;
+  height: clamp(280px, 34vh, 400px);
+  border-radius: var(--radius-md);
   overflow: hidden;
+  border: 1px solid var(--glass-border);
 }
 
-/* Leaflet renders its own controls/attribution; keep them legible. */
+/* Floating layer switcher over the map. */
+.map__layers {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 500; /* above Leaflet panes, below its popups */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(16, 24, 46, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-sm);
+  width: fit-content;
+  max-width: calc(100% - 24px);
+}
+
+.map__layer {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.map__layer:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.map__layer--active {
+  background: #fff;
+  color: var(--ink);
+}
+
+.map__layer:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Leaflet chrome, themed to match the glass UI. */
 .map__canvas .leaflet-container {
-  background: #1a2233;
+  background: #16203a;
   font: inherit;
+}
+
+.map__canvas .leaflet-control-zoom {
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.map__canvas .leaflet-control-zoom a {
+  background: rgba(16, 24, 46, 0.72);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.map__canvas .leaflet-control-zoom a:hover {
+  background: rgba(36, 48, 80, 0.86);
+}
+
+.map__canvas .leaflet-control-attribution {
+  background: rgba(16, 24, 46, 0.6);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 10.5px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.map__canvas .leaflet-control-attribution a {
+  color: var(--accent-cool);
 }
 
 /* ============================================================
@@ -1147,48 +1205,32 @@
   flex-shrink: 0;
 }
 
-/* Keep the map's title aligned with its layer chips row. */
-.map__head .card__title {
-  align-self: center;
-}
 
 /* Fluid type for the hero temperature so it scales cleanly across sizes. */
 .current__temp {
   font-size: clamp(52px, 12vw, 84px);
 }
 
-/* Wide screens: two columns. Left stack = current → air quality → UV; the map
-   sits beside them in the right column, spanning their full height. Hourly and
-   the 5-day forecast span the full width underneath. */
-@media (min-width: 1000px) {
+/* Wide screens: current weather occupies the left column across two rows, with
+   air quality and UV stacked beside it. The map then spans the full width as a
+   landscape band — a map needs width to be readable, so it is never squeezed
+   into a tall narrow column. Hourly and forecast follow, also full width. */
+@media (min-width: 900px) {
   .dashboard {
-    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr);
+    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr);
     grid-template-areas:
-      'current  map'
-      'air      map'
-      'uv       map'
+      'current  air'
+      'current  uv'
+      'map      map'
       'hourly   hourly'
       'forecast forecast';
   }
   .dashboard > .current { grid-area: current; }
   .dashboard > .air { grid-area: air; }
   .dashboard > .uv { grid-area: uv; }
+  .dashboard > .map { grid-area: map; }
   .dashboard > .hourly { grid-area: hourly; }
   .dashboard > .forecast { grid-area: forecast; }
-
-  /* Map fills the tall right column beside the left stack. */
-  .dashboard > .map {
-    grid-area: map;
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    position: sticky;
-    top: 20px;
-  }
-  .dashboard > .map .map__canvas {
-    flex: 1;
-    min-height: 360px;
-  }
 }
 
 /* Prevent any accidental horizontal overflow on small screens. */

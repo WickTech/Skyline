@@ -57,22 +57,7 @@ const WeatherMap = ({ lat, lon }) => {
 
   return (
     <section className="card map" aria-label="Weather map">
-      <div className="map__head">
-        <h3 className="card__title">Map</h3>
-        <div className="map__layers" role="group" aria-label="Map layer">
-          {OVERLAYS.map((o) => (
-            <button
-              key={o.key}
-              type="button"
-              className={`chip ${active === o.key ? 'chip--active' : ''}`}
-              onClick={() => setActive(o.key)}
-              disabled={o.key === 'radar' && !radarUrl}
-            >
-              {o.label}
-            </button>
-          ))}
-        </div>
-      </div>
+      <h3 className="card__title">Map</h3>
 
       <div className="map__canvas">
         <MapContainer
@@ -89,6 +74,23 @@ const WeatherMap = ({ lat, lon }) => {
           <Recenter lat={lat} lon={lon} />
           <AutoResize />
         </MapContainer>
+
+        {/* Layer switcher floats over the map, the way map apps present it —
+            keeps the control next to what it changes and saves vertical space. */}
+        <div className="map__layers" role="group" aria-label="Map layer">
+          {OVERLAYS.map((o) => (
+            <button
+              key={o.key}
+              type="button"
+              className={`map__layer ${active === o.key ? 'map__layer--active' : ''}`}
+              onClick={() => setActive(o.key)}
+              disabled={o.key === 'radar' && !radarUrl}
+              aria-pressed={active === o.key}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
       </div>
     </section>
   );
