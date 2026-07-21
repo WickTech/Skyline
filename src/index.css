@@ -1,50 +1,52 @@
-/* Metric-adjusted fallback: renders Arial at Inter's exact metrics so the box
-   size is identical before and after the web font loads → no layout shift (CLS)
-   when Inter swaps in. Numbers generated for Inter over Arial. */
+/* Metric-adjusted fallback: renders Arial at Manrope's metrics so the box size
+   is close to identical before and after the web font loads → no layout shift
+   (CLS) when Manrope swaps in. */
 @font-face {
-  font-family: 'Inter Fallback';
+  font-family: 'Manrope Fallback';
   src: local('Arial');
-  ascent-override: 90.44%;
-  descent-override: 22.52%;
+  ascent-override: 103.5%;
+  descent-override: 28.5%;
   line-gap-override: 0%;
-  size-adjust: 107.12%;
+  size-adjust: 100.4%;
 }
 
 :root {
   /* ---- Surfaces (glass) ---- */
-  --glass-bg: rgba(255, 255, 255, 0.11);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-strong: rgba(255, 255, 255, 0.17);
-  --glass-hi: rgba(255, 255, 255, 0.5); /* top sheen highlight */
+  --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.045));
+  --glass-flat: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-strong: rgba(255, 255, 255, 0.14);
+  --glass-hi: rgba(255, 255, 255, 0.45); /* top sheen highlight */
+  --tile: rgba(255, 255, 255, 0.06);
+  --tile-border: rgba(255, 255, 255, 0.09);
 
   /* ---- Text ---- */
-  --text: #f8fafc;
-  --text-soft: rgba(248, 250, 252, 0.8);
-  --text-dim: rgba(248, 250, 252, 0.58);
+  --text: #f5f7fb;
+  --text-soft: rgba(245, 247, 251, 0.72);
+  --text-dim: rgba(245, 247, 251, 0.5);
 
   /* ---- Accents ---- */
-  --accent: #ffffff;
-  --accent-warm: #ffcf6b; /* sun */
-  --accent-cool: #8fb4ff; /* sky */
-  --ink: #16244a; /* readable text on light accents */
+  --accent: #ffd27a; /* warm — sun */
+  --accent-warm: #ffd27a;
+  --accent-cool: #8fb4ff; /* cool — sky */
+  --ink: #20183a; /* readable text on light accents */
   --ring: rgba(255, 255, 255, 0.85); /* focus ring */
 
   /* ---- Radii ---- */
-  --radius-lg: 24px;
-  --radius-md: 16px;
-  --radius-sm: 10px;
+  --radius-lg: 26px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
 
   /* ---- Elevation (layered) ---- */
-  --shadow: 0 1px 0 rgba(255, 255, 255, 0.14) inset, 0 22px 48px -12px rgba(9, 14, 32, 0.5),
-    0 6px 16px -8px rgba(9, 14, 32, 0.4);
-  --shadow-sm: 0 6px 18px rgba(9, 14, 32, 0.28);
-  --shadow-hover: 0 1px 0 rgba(255, 255, 255, 0.22) inset, 0 30px 60px -14px rgba(9, 14, 32, 0.58),
-    0 10px 22px -10px rgba(9, 14, 32, 0.46);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 26px 54px -20px rgba(6, 10, 28, 0.6);
+  --shadow-sm: 0 10px 24px -12px rgba(6, 10, 28, 0.6);
+  --shadow-hover: 0 1px 0 rgba(255, 255, 255, 0.26) inset, 0 34px 66px -22px rgba(6, 10, 28, 0.7);
 
-  --space: 20px;
+  --space: 18px;
 
-  --font: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+  --font: 'Manrope', 'Manrope Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
     'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 * {
@@ -55,6 +57,12 @@ html,
 body,
 #root {
   min-height: 100%;
+}
+
+/* Base colour behind the sky gradient, so overscroll never flashes white. */
+html,
+body {
+  background: #161227;
 }
 
 html {
@@ -80,8 +88,18 @@ a {
 }
 
 ::selection {
-  background: var(--accent-warm);
+  background: var(--accent);
   color: var(--ink);
+}
+
+/* Shared label treatment: monospaced, letterspaced small caps used for every
+   section header and data label. */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-soft);
 }
 
 /* Consistent, visible keyboard focus across all interactive elements. */
