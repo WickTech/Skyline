@@ -623,6 +623,9 @@
 .sk-grid--row { grid-template-columns: repeat(5, 1fr); }
 .sk-tile { height: 56px; }
 .sk-gauge { height: 150px; border-radius: 16px; }
+.sk-uv { height: 60px; border-radius: 12px; }
+.sk-full { grid-column: 1 / -1; }
+.sk-map { height: 380px; border-radius: 16px; }
 
 /* ---------- Footer ---------- */
 .footer {
