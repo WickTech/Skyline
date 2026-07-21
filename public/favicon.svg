@@ -1,0 +1,42 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Skyline">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5b9dff"/>
+      <stop offset="0.55" stop-color="#4f7bff"/>
+      <stop offset="1" stop-color="#7c5cff"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="42" y1="12" x2="54" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe08a"/>
+      <stop offset="1" stop-color="#ffb347"/>
+    </linearGradient>
+    <linearGradient id="city" x1="32" y1="30" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#eaf1ff"/>
+      <stop offset="1" stop-color="#c3d4ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="15" fill="url(#sky)"/>
+
+  <!-- sun -->
+  <circle cx="47.5" cy="18.5" r="8.5" fill="url(#sun)"/>
+  <circle cx="47.5" cy="18.5" r="12.5" fill="#ffe08a" opacity="0.18"/>
+
+  <!-- skyline silhouette -->
+  <g fill="url(#city)">
+    <rect x="10" y="38" width="7" height="18" rx="1.5"/>
+    <rect x="19" y="30" width="8" height="26" rx="1.5"/>
+    <rect x="29" y="34" width="6" height="22" rx="1.5"/>
+    <rect x="37" y="27" width="8" height="29" rx="1.5"/>
+    <rect x="47" y="33" width="7" height="23" rx="1.5"/>
+  </g>
+
+  <!-- lit windows -->
+  <g fill="#4f7bff" opacity="0.55">
+    <rect x="21.5" y="34" width="1.6" height="1.6"/>
+    <rect x="24" y="34" width="1.6" height="1.6"/>
+    <rect x="21.5" y="38" width="1.6" height="1.6"/>
+    <rect x="39.5" y="31" width="1.6" height="1.6"/>
+    <rect x="42" y="31" width="1.6" height="1.6"/>
+    <rect x="39.5" y="35" width="1.6" height="1.6"/>
+  </g>
+</svg>

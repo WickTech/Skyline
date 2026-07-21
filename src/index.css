@@ -1,23 +1,37 @@
 :root {
-  /* Design tokens */
-  --glass-bg: rgba(255, 255, 255, 0.12);
-  --glass-border: rgba(255, 255, 255, 0.22);
-  --glass-strong: rgba(255, 255, 255, 0.18);
-  --text: #f7fafc;
-  --text-soft: rgba(247, 250, 252, 0.78);
-  --text-dim: rgba(247, 250, 252, 0.6);
-  --accent: #ffffff;
+  /* ---- Surfaces (glass) ---- */
+  --glass-bg: rgba(255, 255, 255, 0.11);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-strong: rgba(255, 255, 255, 0.17);
+  --glass-hi: rgba(255, 255, 255, 0.5); /* top sheen highlight */
 
+  /* ---- Text ---- */
+  --text: #f8fafc;
+  --text-soft: rgba(248, 250, 252, 0.8);
+  --text-dim: rgba(248, 250, 252, 0.58);
+
+  /* ---- Accents ---- */
+  --accent: #ffffff;
+  --accent-warm: #ffcf6b; /* sun */
+  --accent-cool: #8fb4ff; /* sky */
+  --ink: #16244a; /* readable text on light accents */
+  --ring: rgba(255, 255, 255, 0.85); /* focus ring */
+
+  /* ---- Radii ---- */
   --radius-lg: 24px;
   --radius-md: 16px;
   --radius-sm: 10px;
 
-  --shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
-  --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.18);
+  /* ---- Elevation (layered) ---- */
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.14) inset, 0 22px 48px -12px rgba(9, 14, 32, 0.5),
+    0 6px 16px -8px rgba(9, 14, 32, 0.4);
+  --shadow-sm: 0 6px 18px rgba(9, 14, 32, 0.28);
+  --shadow-hover: 0 1px 0 rgba(255, 255, 255, 0.22) inset, 0 30px 60px -14px rgba(9, 14, 32, 0.58),
+    0 10px 22px -10px rgba(9, 14, 32, 0.46);
 
   --space: 20px;
 
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue',
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue',
     Arial, sans-serif;
 }
 
@@ -31,12 +45,18 @@ body,
   min-height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: var(--font);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'ss01';
 }
 
 button {
@@ -47,7 +67,26 @@ a {
   color: inherit;
 }
 
+::selection {
+  background: var(--accent-warm);
+  color: var(--ink);
+}
+
+/* Consistent, visible keyboard focus across all interactive elements. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible) {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   * {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
