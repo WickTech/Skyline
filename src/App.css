@@ -235,6 +235,10 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 20px;
+  /* Don't stretch each card to the tallest in its row: the current-weather
+     card must keep its natural height when the async air-quality / UV data
+     lands in the side column and changes that column's height. */
+  align-items: start;
   animation: rise 0.5s ease both;
 }
 
@@ -589,6 +593,7 @@
 .skeleton {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
+  align-items: start;
   gap: 20px;
 }
 
@@ -662,6 +667,66 @@
   .btn--ghost {
     padding: 0 14px;
   }
+
+  /* A shorter map reads better on a phone and reserves less scroll. */
+  .map__canvas,
+  .sk-map {
+    height: 300px;
+  }
+}
+
+/* ---------- Mobile (phones) ---------- */
+@media (max-width: 560px) {
+  .shell {
+    padding: 20px 14px 40px;
+  }
+
+  /* Search: field on its own row, actions share the row below — full-width,
+     comfortable tap targets. */
+  .searchbar {
+    gap: 8px;
+  }
+  .searchbar__field {
+    flex: 1 1 100%;
+  }
+  .btn--primary {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .btn__label {
+    display: inline; /* bring the label back; there's room on its own row */
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  /* Current weather: stack the glyph above/beside cleanly, tame the huge temp. */
+  .current__temp-row {
+    gap: 12px;
+    margin: 6px 0 18px;
+  }
+  .current__glyph svg {
+    width: 72px;
+    height: 72px;
+  }
+
+  /* Air quality: gauge centres above its summary rather than squeezing side by
+     side on a narrow screen. */
+  .air__main {
+    justify-content: center;
+    text-align: center;
+  }
+  .air__summary {
+    flex-basis: 100%;
+  }
+  .air__badge {
+    margin-inline: auto;
+  }
+
+  .map__head {
+    align-items: flex-start;
+  }
 }
 
 @media (max-width: 420px) {
@@ -671,6 +736,17 @@
 
   .forecast__grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .air__pollutants {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .masthead {
+    margin-bottom: 20px;
+  }
+  .brand__mark {
+    font-size: 32px;
   }
 }
 
