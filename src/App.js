@@ -159,13 +159,13 @@ function App() {
                 <UvIndex uv={uv} />
               </div>
               <div className="dashboard__full">
+                {coord && <WeatherMap lat={coord.lat} lon={coord.lon} />}
+              </div>
+              <div className="dashboard__full">
                 <Hourly hourly={hourly} unit={unit} />
               </div>
               <div className="dashboard__full">
                 <Forecast forecast={forecast} unit={unit} />
-              </div>
-              <div className="dashboard__full">
-                {coord && <WeatherMap lat={coord.lat} lon={coord.lon} />}
               </div>
             </div>
           </>

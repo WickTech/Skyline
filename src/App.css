@@ -1110,3 +1110,66 @@
   color: var(--text);
   border-bottom-color: var(--accent-cool);
 }
+
+/* ============================================================
+   Layout & design refinement — fluid sizing + unified sections.
+   ============================================================ */
+
+/* Fluid shell: grows with the viewport on large screens, snug on small. */
+.shell {
+  max-width: min(1120px, 100%);
+  padding: clamp(18px, 3.5vw, 48px) clamp(14px, 4vw, 32px) 48px;
+}
+
+.dashboard,
+.skeleton {
+  gap: clamp(14px, 2vw, 20px);
+}
+
+/* Unified section headers: every card title gets the same leading accent bar,
+   so the sections read as one planned system rather than separate widgets. */
+.card__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card__title::before {
+  content: '';
+  width: 4px;
+  height: 15px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--accent-cool), var(--accent-warm));
+  flex-shrink: 0;
+}
+
+/* Keep the map's title aligned with its layer chips row. */
+.map__head .card__title {
+  align-self: center;
+}
+
+/* Fluid type for the hero temperature so it scales cleanly across sizes. */
+.current__temp {
+  font-size: clamp(52px, 12vw, 84px);
+}
+
+/* On very wide screens the single hero card can get too airy — cap its reading
+   width a touch by letting the side column take a bit more room. */
+@media (min-width: 1000px) {
+  .dashboard {
+    grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  }
+}
+
+/* Tablet: keep two columns but even them out before the phone breakpoint. */
+@media (max-width: 900px) and (min-width: 761px) {
+  .dashboard {
+    grid-template-columns: 1.3fr 1fr;
+  }
+}
+
+/* Prevent any accidental horizontal overflow on small screens. */
+.dashboard,
+.card,
+.hourly__track {
+  min-width: 0;
+}
