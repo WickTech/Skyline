@@ -30,29 +30,29 @@ const Skeleton = () => (
     <div className="sk-full">
       <div className="card">
         <div className="sk sk-line sk-line--sm" />
-        <div className="sk-grid sk-grid--row">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div className="sk sk-tile" key={i} />
-          ))}
-        </div>
-      </div>
-    </div>
-
-    <div className="sk-full">
-      <div className="card">
-        <div className="sk sk-line sk-line--sm" />
-        <div className="sk-grid sk-grid--row">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div className="sk sk-tile" key={i} />
-          ))}
-        </div>
-      </div>
-    </div>
-
-    <div className="sk-full">
-      <div className="card">
-        <div className="sk sk-line sk-line--sm" />
         <div className="sk sk-map" />
+      </div>
+    </div>
+
+    <div className="sk-full">
+      <div className="card">
+        <div className="sk sk-line sk-line--sm" />
+        <div className="sk-grid sk-grid--row">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div className="sk sk-tile" key={i} />
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div className="sk-full">
+      <div className="card">
+        <div className="sk sk-line sk-line--sm" />
+        <div className="sk-grid sk-grid--row">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div className="sk sk-tile" key={i} />
+          ))}
+        </div>
       </div>
     </div>
   </div>
