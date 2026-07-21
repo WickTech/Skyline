@@ -1,19 +1,27 @@
-// Central place for API configuration. Keys are read exclusively from the
-// environment (see .env.example) — never hardcode them here, or GitHub secret
-// scanning will (rightly) block the push and the key ends up in git history.
+// Central place for API configuration. The OpenWeather key is read exclusively
+// from the environment (see .env.example) — never hardcode it here, or GitHub
+// secret scanning will (rightly) block the push and the key ends up in git
+// history. Open-Meteo, RainViewer and OpenStreetMap are keyless.
 export const OPENWEATHER_KEY = process.env.REACT_APP_OPENWEATHER_KEY || '';
-export const WAQI_TOKEN = process.env.REACT_APP_WAQI_TOKEN || '';
 
-if (!OPENWEATHER_KEY || !WAQI_TOKEN) {
+if (!OPENWEATHER_KEY) {
   // eslint-disable-next-line no-console
   console.warn(
-    '[Skyline] Missing API keys. Copy .env.example to .env and set ' +
-      'REACT_APP_OPENWEATHER_KEY and REACT_APP_WAQI_TOKEN.'
+    '[Skyline] Missing API key. Copy .env.example to .env and set ' +
+      'REACT_APP_OPENWEATHER_KEY.'
   );
 }
 
+// OpenWeather endpoints (all on the same free `appid`, except One Call 3.0
+// which needs a separate — still free — subscription and is used best-effort).
 export const OPENWEATHER_BASE = 'https://api.openweathermap.org/data/2.5';
-export const WAQI_BASE = 'https://api.waqi.info/feed';
+export const ONECALL_BASE = 'https://api.openweathermap.org/data/3.0';
+export const GEO_BASE = 'https://api.openweathermap.org/geo/1.0';
+export const OWM_TILE_BASE = 'https://tile.openweathermap.org/map';
+
+// Keyless third-party sources (both CORS-enabled).
+export const OPENMETEO_BASE = 'https://api.open-meteo.com/v1';
+export const RAINVIEWER_API = 'https://api.rainviewer.com/public/weather-maps.json';
 
 // A small typed-ish error so the UI can show friendly messages.
 export class ApiError extends Error {

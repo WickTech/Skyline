@@ -3,7 +3,11 @@ import SearchBar from './components/SearchBar';
 import UnitToggle from './components/UnitToggle';
 import CurrentWeather from './components/CurrentWeather';
 import Forecast from './components/Forecast';
+import Hourly from './components/Hourly';
 import AirQuality from './components/AirQuality';
+import UvIndex from './components/UvIndex';
+import Alerts from './components/Alerts';
+import WeatherMap from './components/WeatherMap';
 import Skeleton from './components/Skeleton';
 import StateMessage from './components/StateMessage';
 import { useEnvironment } from './hooks/useEnvironment';
@@ -15,8 +19,18 @@ const RECENTS_KEY = 'skyline:recents';
 const DEFAULT_CITY = 'London';
 
 function App() {
-  const { weather, forecast, airQuality, status, error, searchByCity, searchByCoords } =
-    useEnvironment();
+  const {
+    weather,
+    forecast,
+    hourly,
+    uv,
+    airQuality,
+    alerts,
+    status,
+    error,
+    searchByCity,
+    searchByCoords,
+  } = useEnvironment();
 
   const [unit, setUnit] = useState(() => localStorage.getItem(UNIT_KEY) || 'celsius');
   const [recents, setRecents] = useState(() => {
@@ -54,6 +68,7 @@ function App() {
   }, [status, weather, rememberCity]);
 
   const handleSearch = (city) => searchByCity(city);
+  const handleSelectPlace = (place) => searchByCoords(place.lat, place.lon);
 
   const handleGeolocate = () => {
     if (!navigator.geolocation) {
@@ -81,6 +96,7 @@ function App() {
 
   const loading = status === 'loading';
   const showSkeleton = loading && !weather;
+  const coord = weather && weather.coord;
 
   return (
     <div className="app" style={{ background }}>
@@ -100,6 +116,7 @@ function App() {
 
         <SearchBar
           onSearch={handleSearch}
+          onSelectPlace={handleSelectPlace}
           onGeolocate={handleGeolocate}
           loading={loading}
           geoLoading={geoLoading}
@@ -132,13 +149,23 @@ function App() {
                 {error}
               </div>
             )}
+
+            <Alerts alerts={alerts} />
+
             <div className="dashboard">
               <CurrentWeather weather={weather} unit={unit} />
               <div className="dashboard__side">
                 <AirQuality airQuality={airQuality} />
+                <UvIndex uv={uv} />
+              </div>
+              <div className="dashboard__full">
+                <Hourly hourly={hourly} unit={unit} />
               </div>
               <div className="dashboard__full">
                 <Forecast forecast={forecast} unit={unit} />
+              </div>
+              <div className="dashboard__full">
+                {coord && <WeatherMap lat={coord.lat} lon={coord.lon} />}
               </div>
             </div>
           </>
@@ -149,10 +176,18 @@ function App() {
             Data:{' '}
             <a href="https://openweathermap.org/" target="_blank" rel="noreferrer">
               OpenWeatherMap
+            </a>
+            ,{' '}
+            <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">
+              Open-Meteo
+            </a>
+            ,{' '}
+            <a href="https://www.rainviewer.com/" target="_blank" rel="noreferrer">
+              RainViewer
             </a>{' '}
             &amp;{' '}
-            <a href="https://aqicn.org/" target="_blank" rel="noreferrer">
-              WAQI
+            <a href="https://www.openstreetmap.org/" target="_blank" rel="noreferrer">
+              OpenStreetMap
             </a>
           </span>
         </footer>
