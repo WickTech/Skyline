@@ -11,7 +11,7 @@ import WeatherMap from './components/WeatherMap';
 import Skeleton from './components/Skeleton';
 import StateMessage from './components/StateMessage';
 import { useEnvironment } from './hooks/useEnvironment';
-import { themeForIcon, gradientCss } from './utils/theme';
+import { skyForIcon, auroraForIcon } from './utils/theme';
 import './App.css';
 
 const UNIT_KEY = 'skyline:unit';
@@ -89,17 +89,26 @@ function App() {
     );
   };
 
-  const background = useMemo(() => {
-    const icon = weather && weather.weather && weather.weather[0] && weather.weather[0].icon;
-    return gradientCss(themeForIcon(icon));
-  }, [weather]);
+  // The whole page reacts to the conditions: sky gradient plus the two ambient
+  // aurora blobs both derive from the current weather icon.
+  const icon = weather && weather.weather && weather.weather[0] && weather.weather[0].icon;
+  const background = useMemo(
+    () => skyForIcon(icon, weather && weather.sys ? { dt: weather.dt, sunset: weather.sys.sunset } : undefined),
+    [icon, weather]
+  );
+  const [auroraA, auroraB] = useMemo(() => auroraForIcon(icon), [icon]);
 
   const loading = status === 'loading';
   const showSkeleton = loading && !weather;
   const coord = weather && weather.coord;
 
   return (
-    <div className="app" style={{ background }}>
+    <div className="app">
+      {/* Layered sky: gradient wash, two drifting aurora blobs, then a vignette
+          to keep the glass cards legible over any of them. */}
+      <div className="app__sky" style={{ background }} />
+      <div className="app__aurora app__aurora--a" style={{ background: `radial-gradient(circle, ${auroraA}, transparent 62%)` }} />
+      <div className="app__aurora app__aurora--b" style={{ background: `radial-gradient(circle, ${auroraB}, transparent 62%)` }} />
       <div className="app__overlay" />
 
       <main className="shell">
