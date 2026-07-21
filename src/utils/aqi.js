@@ -1,65 +1,44 @@
-// US EPA AQI scale → category, color, and guidance.
-// Mirrors the AirNow ranges but centralised and richer.
+// OpenWeather Air Pollution index (1–5) → category, color, and guidance.
+// 1 Good · 2 Fair · 3 Moderate · 4 Poor · 5 Very Poor.
 
-const LEVELS = [
-  {
-    max: 50,
+const LEVELS = {
+  1: {
     label: 'Good',
     color: '#34d399',
     text: '#064e3b',
-    message:
-      'Air quality is satisfactory and air pollution poses little or no risk.',
+    message: 'Air quality is satisfactory and air pollution poses little or no risk.',
   },
-  {
-    max: 100,
+  2: {
+    label: 'Fair',
+    color: '#a3e635',
+    text: '#365314',
+    message: 'Air quality is acceptable. Unusually sensitive people should watch for symptoms.',
+  },
+  3: {
     label: 'Moderate',
     color: '#fbbf24',
     text: '#713f12',
-    message:
-      'Air quality is acceptable. Unusually sensitive people should consider limiting prolonged outdoor exertion.',
+    message: 'Members of sensitive groups may experience health effects; the general public is less likely to be affected.',
   },
-  {
-    max: 150,
-    label: 'Unhealthy for Sensitive Groups',
+  4: {
+    label: 'Poor',
     color: '#fb923c',
     text: '#7c2d12',
-    message:
-      'Members of sensitive groups may experience health effects. The general public is less likely to be affected.',
+    message: 'Everyone may begin to experience health effects; sensitive groups may see more serious effects.',
   },
-  {
-    max: 200,
-    label: 'Unhealthy',
+  5: {
+    label: 'Very Poor',
     color: '#f87171',
     text: '#7f1d1d',
-    message:
-      'Everyone may begin to experience health effects; sensitive groups may experience more serious effects.',
+    message: 'Health alert: everyone may experience more serious health effects. Limit outdoor exertion.',
   },
-  {
-    max: 300,
-    label: 'Very Unhealthy',
-    color: '#c084fc',
-    text: '#581c87',
-    message:
-      'Health alert: the risk of health effects is increased for everyone.',
-  },
-  {
-    max: Infinity,
-    label: 'Hazardous',
-    color: '#9f1239',
-    text: '#fff1f2',
-    message:
-      'Health warning of emergency conditions: everyone is more likely to be affected.',
-  },
-];
+};
 
 export function aqiInfo(aqi) {
-  if (aqi === null || aqi === undefined || Number.isNaN(aqi)) {
+  if (!aqi || Number.isNaN(aqi) || !LEVELS[aqi]) {
     return { label: 'Unknown', color: '#94a3b8', text: '#0f172a', message: 'No reading available.', percent: 0 };
   }
-  const level = LEVELS.find((l) => aqi <= l.max) || LEVELS[LEVELS.length - 1];
-  // Position on the gauge, capped at the "Very Unhealthy/Hazardous" boundary.
-  const percent = Math.min(100, (aqi / 300) * 100);
-  return { ...level, percent };
+  return { ...LEVELS[aqi], percent: (aqi / 5) * 100 };
 }
 
 export const POLLUTANT_LABELS = {
@@ -69,4 +48,8 @@ export const POLLUTANT_LABELS = {
   no2: 'NO₂',
   so2: 'SO₂',
   co: 'CO',
+  nh3: 'NH₃',
 };
+
+// OpenWeather reports every component in µg/m³.
+export const POLLUTANT_UNIT = 'µg/m³';

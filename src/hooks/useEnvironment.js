@@ -3,22 +3,28 @@ import {
   getCurrentByCity,
   getCurrentByCoords,
   getDailyForecast,
+  getOneCall,
 } from '../api/weather';
 import { getAirQualityByCoords } from '../api/airQuality';
+import { getOpenMeteo } from '../api/openMeteo';
 import { ApiError } from '../api/config';
 
 /**
  * Drives the whole dashboard: one lookup resolves a place to its coordinates,
- * then fetches current weather, 5-day forecast, and air quality together.
+ * then fetches everything else for that point in parallel.
  *
- * Weather is the primary result — if it fails, we surface an error. Air quality
- * is best-effort: many places have no nearby station, so a missing AQI should
- * not blank out the weather.
+ * Current weather is the primary result — if it fails, we surface an error.
+ * Everything else (daily forecast, hourly + UV from Open-Meteo, air quality,
+ * One Call alerts) is best-effort: a missing piece should never blank out the
+ * rest of the dashboard.
  */
 export function useEnvironment() {
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
+  const [hourly, setHourly] = useState([]);
+  const [uv, setUv] = useState(null);
   const [airQuality, setAirQuality] = useState(null);
+  const [alerts, setAlerts] = useState([]);
   const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
   const [error, setError] = useState(null);
 
@@ -47,20 +53,31 @@ export function useEnvironment() {
 
     const { lat, lon } = current.coord || {};
 
-    const [forecastResult, aqResult] = await Promise.allSettled([
+    const [forecastR, meteoR, aqR, oneCallR] = await Promise.allSettled([
       getDailyForecast(lat, lon),
+      getOpenMeteo(lat, lon),
       getAirQualityByCoords(lat, lon),
+      getOneCall(lat, lon),
     ]);
 
     if (id !== requestId.current) return;
 
-    setForecast(forecastResult.status === 'fulfilled' ? forecastResult.value : []);
-    setAirQuality(aqResult.status === 'fulfilled' ? aqResult.value : null);
+    setForecast(forecastR.status === 'fulfilled' ? forecastR.value : []);
+
+    const meteo = meteoR.status === 'fulfilled' ? meteoR.value : null;
+    setHourly(meteo ? meteo.hourly : []);
+    setUv(meteo ? { now: meteo.uvNow, max: meteo.uvMax } : null);
+
+    setAirQuality(aqR.status === 'fulfilled' ? aqR.value : null);
+
+    const oneCall = oneCallR.status === 'fulfilled' ? oneCallR.value : null;
+    setAlerts(oneCall && Array.isArray(oneCall.alerts) ? oneCall.alerts : []);
+
     setStatus('success');
   }, []);
 
   const searchByCity = useCallback((city) => {
-    if (!city || !city.trim()) return;
+    if (!city || !city.trim()) return undefined;
     return load(() => getCurrentByCity(city));
   }, [load]);
 
@@ -68,5 +85,16 @@ export function useEnvironment() {
     return load(() => getCurrentByCoords(lat, lon));
   }, [load]);
 
-  return { weather, forecast, airQuality, status, error, searchByCity, searchByCoords };
+  return {
+    weather,
+    forecast,
+    hourly,
+    uv,
+    airQuality,
+    alerts,
+    status,
+    error,
+    searchByCity,
+    searchByCoords,
+  };
 }

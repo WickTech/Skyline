@@ -240,6 +240,8 @@
 
 .dashboard__side {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .dashboard__side > * {
@@ -667,4 +669,230 @@
   .forecast__grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* ---------- Search autocomplete ---------- */
+.searchbar__field {
+  position: relative;
+}
+
+.searchbar__suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
+}
+
+.suggestion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  text-align: left;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  background: var(--glass-bg);
+}
+
+.suggestion__icon {
+  color: var(--text-soft);
+  flex-shrink: 0;
+}
+
+/* ---------- Chip active state (map layers) ---------- */
+.chip--active {
+  background: var(--glass-strong);
+  color: var(--text);
+  border-color: var(--text-soft);
+}
+
+.chip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Air quality extras ---------- */
+.air__scale {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.pollutant__unit {
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+/* ---------- Hourly ---------- */
+.hourly__track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.hourly__cell {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 62px;
+  padding: 12px 6px;
+  border-radius: 14px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.hourly__time {
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.hourly__temp {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.hourly__precip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+/* ---------- UV index ---------- */
+.uv__main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.uv__value {
+  display: block;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+}
+
+.uv__band {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.uv__max {
+  margin: 12px 0 0;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+/* ---------- Alerts ---------- */
+.alerts {
+  animation: rise 0.5s ease both;
+}
+
+.alert + .alert {
+  margin-top: 10px;
+}
+
+.alert__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  background: rgba(248, 113, 113, 0.14);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.alert__icon {
+  color: #f87171;
+  flex-shrink: 0;
+}
+
+.alert__event {
+  font-weight: 600;
+}
+
+.alert__source {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.alert__chevron {
+  flex-shrink: 0;
+  color: var(--text-soft);
+  transition: transform 0.2s ease;
+}
+
+.alert--open .alert__chevron {
+  transform: rotate(180deg);
+}
+
+.alert__body {
+  margin: 8px 2px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-soft);
+  white-space: pre-line;
+}
+
+/* ---------- Weather map ---------- */
+.map__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.map__head .card__title {
+  margin: 0;
+}
+
+.map__layers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.map__canvas {
+  height: 380px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* Leaflet renders its own controls/attribution; keep them legible. */
+.map__canvas .leaflet-container {
+  background: #1a2233;
+  font: inherit;
 }

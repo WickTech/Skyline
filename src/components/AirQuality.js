@@ -1,5 +1,5 @@
 import React from 'react';
-import { aqiInfo, POLLUTANT_LABELS } from '../utils/aqi';
+import { aqiInfo, POLLUTANT_LABELS, POLLUTANT_UNIT } from '../utils/aqi';
 import { relativeTime } from '../utils/format';
 
 // Circular SVG gauge — value sweeps proportionally, stroke colour matches the
@@ -36,7 +36,7 @@ const AirQuality = ({ airQuality }) => {
     return (
       <section className="card air air--empty" aria-label="Air quality">
         <h3 className="card__title">Air Quality</h3>
-        <p className="air__none">No air-quality station found near this location.</p>
+        <p className="air__none">Air-quality data unavailable for this location.</p>
       </section>
     );
   }
@@ -55,12 +55,7 @@ const AirQuality = ({ airQuality }) => {
             {info.label}
           </span>
           <p className="air__message">{info.message}</p>
-          {airQuality.dominantPollutant ? (
-            <p className="air__dominant">
-              Main pollutant:{' '}
-              <strong>{POLLUTANT_LABELS[airQuality.dominantPollutant] || airQuality.dominantPollutant.toUpperCase()}</strong>
-            </p>
-          ) : null}
+          <p className="air__scale">OpenWeather index · 1 (Good) – 5 (Very Poor)</p>
         </div>
       </div>
 
@@ -69,14 +64,16 @@ const AirQuality = ({ airQuality }) => {
           {pollutants.map(([key, value]) => (
             <li className="pollutant" key={key}>
               <span className="pollutant__label">{POLLUTANT_LABELS[key] || key}</span>
-              <span className="pollutant__value">{value}</span>
+              <span className="pollutant__value">
+                {Math.round(value)}
+                <span className="pollutant__unit"> {POLLUTANT_UNIT}</span>
+              </span>
             </li>
           ))}
         </ul>
       )}
 
       <footer className="air__foot">
-        {airQuality.stationName ? <span className="air__station">{airQuality.stationName}</span> : null}
         {airQuality.time ? <span className="air__time">Updated {relativeTime(airQuality.time)}</span> : null}
       </footer>
     </section>

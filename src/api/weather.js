@@ -1,4 +1,4 @@
-import { OPENWEATHER_BASE, OPENWEATHER_KEY, getJson, ApiError } from './config';
+import { OPENWEATHER_BASE, ONECALL_BASE, OPENWEATHER_KEY, getJson, ApiError } from './config';
 
 // All requests use metric units; the UI converts to °F on the client so a unit
 // toggle never triggers a refetch.
@@ -36,6 +36,17 @@ export async function getDailyForecast(lat, lon) {
     throw new ApiError('Forecast unavailable for this location.');
   }
   return aggregateDaily(data.list);
+}
+
+/**
+ * One Call API 3.0 — richer bundle (UV, weather alerts, extended daily). This
+ * lives on a separate OpenWeather subscription that is free but must be enabled
+ * on the account, so callers treat it as best-effort: a 401 here just means the
+ * subscription isn't active and the rest of the dashboard carries on.
+ */
+export async function getOneCall(lat, lon) {
+  const url = `${ONECALL_BASE}/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=minutely&appid=${OPENWEATHER_KEY}`;
+  return getJson(url);
 }
 
 function aggregateDaily(list) {
