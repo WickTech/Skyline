@@ -1,5 +1,9 @@
 # Skyline 🌤️
 
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
+![Create React App](https://img.shields.io/badge/CRA-5-09D3AC?logo=createreactapp&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+
 A single-search **weather & air-quality dashboard** built with React. Type a city
 once and Skyline resolves it to coordinates, then pulls **current conditions**,
 an **hourly** and **5-day forecast**, **UV index**, **air quality**, severe-weather
