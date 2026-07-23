@@ -9,6 +9,9 @@
 # misc
 .DS_Store
 
+# claude-flow internal state (leaks local paths)
+.claude-flow/
+
 # local env files (NEVER commit real API keys)
 .env
 .env.local
