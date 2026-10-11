@@ -1,22 +1,19 @@
 import { useCallback, useRef, useState } from 'react';
-import {
-  getCurrentByCity,
-  getCurrentByCoords,
-  getDailyForecast,
-  getOneCall,
-} from '../api/weather';
+import { getForecast } from '../api/openMeteo';
 import { getAirQualityByCoords } from '../api/airQuality';
-import { getOpenMeteo } from '../api/openMeteo';
+import { getAlerts } from '../api/alerts';
+import { geocodeCity, reverseGeocode } from '../api/geocoding';
 import { ApiError } from '../api/config';
 
 /**
- * Drives the whole dashboard: one lookup resolves a place to its coordinates,
- * then fetches everything else for that point in parallel.
+ * Drives the whole dashboard. Every lookup first resolves a *place* (name +
+ * coordinates) — by geocoding a typed city, from an autocomplete pick, or by
+ * reverse-geocoding the device location — then fetches everything for that
+ * point in parallel.
  *
- * Current weather is the primary result — if it fails, we surface an error.
- * Everything else (daily forecast, hourly + UV from Open-Meteo, air quality,
- * One Call alerts) is best-effort: a missing piece should never blank out the
- * rest of the dashboard.
+ * The Open-Meteo forecast (current, hourly, UV, 5-day) is the primary result —
+ * if it fails, we surface an error. Air quality and the optional alerts are
+ * best-effort: a missing piece never blanks out the rest of the dashboard.
  */
 export function useEnvironment() {
   const [weather, setWeather] = useState(null);
@@ -31,59 +28,70 @@ export function useEnvironment() {
   // Guards against out-of-order responses when searches overlap.
   const requestId = useRef(0);
 
-  const load = useCallback(async (fetchCurrent) => {
+  const load = useCallback(async (resolvePlace) => {
     const id = ++requestId.current;
     setStatus('loading');
     setError(null);
 
-    let current;
+    let place;
+    let meteo;
     try {
-      current = await fetchCurrent();
+      place = await resolvePlace();
+      meteo = await getForecast(place.lat, place.lon);
     } catch (e) {
       if (id !== requestId.current) return;
       setStatus('error');
-      setError(
-        e instanceof ApiError ? e.message : 'Something went wrong. Please try again.'
-      );
+      setError(e instanceof ApiError ? e.message : 'Something went wrong. Please try again.');
       return;
     }
-
     if (id !== requestId.current) return;
+
+    const current = {
+      ...meteo.current,
+      name: place.name,
+      sys: { ...meteo.current.sys, country: place.countryCode },
+    };
     setWeather(current);
+    setForecast(meteo.daily);
+    setHourly(meteo.hourly);
+    setUv({ now: meteo.uvNow, max: meteo.uvMax });
 
-    const { lat, lon } = current.coord || {};
-
-    const [forecastR, meteoR, aqR, oneCallR] = await Promise.allSettled([
-      getDailyForecast(lat, lon),
-      getOpenMeteo(lat, lon),
-      getAirQualityByCoords(lat, lon),
-      getOneCall(lat, lon),
+    const [aqR, alertsR] = await Promise.allSettled([
+      getAirQualityByCoords(place.lat, place.lon),
+      getAlerts(place.lat, place.lon),
     ]);
-
     if (id !== requestId.current) return;
-
-    setForecast(forecastR.status === 'fulfilled' ? forecastR.value : []);
-
-    const meteo = meteoR.status === 'fulfilled' ? meteoR.value : null;
-    setHourly(meteo ? meteo.hourly : []);
-    setUv(meteo ? { now: meteo.uvNow, max: meteo.uvMax } : null);
 
     setAirQuality(aqR.status === 'fulfilled' ? aqR.value : null);
-
-    const oneCall = oneCallR.status === 'fulfilled' ? oneCallR.value : null;
-    setAlerts(oneCall && Array.isArray(oneCall.alerts) ? oneCall.alerts : []);
-
+    setAlerts(alertsR.status === 'fulfilled' ? alertsR.value : []);
     setStatus('success');
   }, []);
 
-  const searchByCity = useCallback((city) => {
-    if (!city || !city.trim()) return undefined;
-    return load(() => getCurrentByCity(city));
-  }, [load]);
+  /** Free-text search: take the best geocoding match. */
+  const searchByCity = useCallback(
+    (city) => {
+      if (!city || !city.trim()) return undefined;
+      return load(async () => {
+        const [best] = await geocodeCity(city, 1);
+        if (!best) throw new ApiError('Location not found.', { kind: 'not_found' });
+        return best;
+      });
+    },
+    [load]
+  );
 
-  const searchByCoords = useCallback((lat, lon) => {
-    return load(() => getCurrentByCoords(lat, lon));
-  }, [load]);
+  /** An autocomplete suggestion: already a fully resolved place. */
+  const searchByPlace = useCallback((place) => load(async () => place), [load]);
+
+  /** Device location: reverse-geocode for a label, best-effort. */
+  const searchByCoords = useCallback(
+    (lat, lon) =>
+      load(async () => {
+        const named = await reverseGeocode(lat, lon).catch(() => null);
+        return named || { name: 'Your location', countryCode: null, lat, lon };
+      }),
+    [load]
+  );
 
   return {
     weather,
@@ -95,6 +103,7 @@ export function useEnvironment() {
     status,
     error,
     searchByCity,
+    searchByPlace,
     searchByCoords,
   };
 }

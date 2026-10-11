@@ -1,16 +1,19 @@
-import { OWM_TILE_BASE, OPENWEATHER_KEY, RAINVIEWER_API, getJson } from './config';
+import { HAS_OPENWEATHER, OWM_TILE_BASE, OPENWEATHER_KEY, RAINVIEWER_API, getJson } from './config';
 
-// Map tile sources for the interactive map. OpenWeather Weather Maps 1.0 are on
-// the free `appid`; RainViewer radar is keyless. Both are XYZ tile layers that
-// drop straight into react-leaflet's <TileLayer url=… />.
+// Map tile sources for the interactive map. RainViewer radar is keyless and
+// always available; the OpenWeather Weather Maps layers appear only when the
+// optional VITE_OPENWEATHER_KEY is set. All are XYZ tile layers that drop
+// straight into react-leaflet's TileLayer.
 
-export const OWM_LAYERS = {
+const ALL_OWM_LAYERS = {
   precipitation: { id: 'precipitation_new', label: 'Precipitation' },
   clouds: { id: 'clouds_new', label: 'Clouds' },
   temp: { id: 'temp_new', label: 'Temperature' },
   wind: { id: 'wind_new', label: 'Wind' },
   pressure: { id: 'pressure_new', label: 'Pressure' },
 };
+
+export const OWM_LAYERS = HAS_OPENWEATHER ? ALL_OWM_LAYERS : {};
 
 export function owmTileUrl(layerKey) {
   const layer = OWM_LAYERS[layerKey];

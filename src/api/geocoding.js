@@ -1,17 +1,19 @@
-import { GEO_BASE, OPENWEATHER_KEY, getJson } from './config';
+import { GEOCODING_BASE, REVERSE_GEOCODE_URL, getJson } from './config';
 
-// OpenWeather Geocoding API. Turns a free-text query into candidate places
-// (with country/state so "Springfield" is disambiguable) and turns coordinates
-// back into a readable label for the geolocation button.
+// Forward search: Open-Meteo Geocoding (keyless). Returns candidate places with
+// region + country so "Springfield" is disambiguable.
+// Reverse lookup (geolocation button): BigDataCloud's free client-side
+// endpoint (keyless, CORS-enabled) — Open-Meteo has no reverse geocoder.
 
-function normalizePlace(p) {
+function place({ name, state, country, countryCode, lat, lon }) {
   return {
-    name: p.name,
-    state: p.state || null,
-    country: p.country || null,
-    lat: p.lat,
-    lon: p.lon,
-    label: [p.name, p.state, p.country].filter(Boolean).join(', '),
+    name,
+    state: state || null,
+    country: country || null,
+    countryCode: countryCode || null,
+    lat,
+    lon,
+    label: [name, state, country].filter(Boolean).join(', '),
   };
 }
 
@@ -19,14 +21,33 @@ function normalizePlace(p) {
 export async function geocodeCity(query, limit = 5) {
   const q = query.trim();
   if (!q) return [];
-  const url = `${GEO_BASE}/direct?q=${encodeURIComponent(q)}&limit=${limit}&appid=${OPENWEATHER_KEY}`;
-  const list = await getJson(url);
-  return Array.isArray(list) ? list.map(normalizePlace) : [];
+  const params = new URLSearchParams({ name: q, count: String(limit), language: 'en', format: 'json' });
+  const data = await getJson(`${GEOCODING_BASE}/search?${params.toString()}`);
+  const results = data && Array.isArray(data.results) ? data.results : [];
+  return results.map((r) =>
+    place({
+      name: r.name,
+      state: r.admin1,
+      country: r.country,
+      countryCode: r.country_code,
+      lat: r.latitude,
+      lon: r.longitude,
+    })
+  );
 }
 
-/** Reverse: nearest named place for a coordinate pair. */
+/** Reverse: nearest named place for a coordinate pair (null if unknown). */
 export async function reverseGeocode(lat, lon) {
-  const url = `${GEO_BASE}/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OPENWEATHER_KEY}`;
-  const list = await getJson(url);
-  return Array.isArray(list) && list[0] ? normalizePlace(list[0]) : null;
+  const params = new URLSearchParams({ latitude: lat, longitude: lon, localityLanguage: 'en' });
+  const r = await getJson(`${REVERSE_GEOCODE_URL}?${params.toString()}`);
+  const name = r && (r.city || r.locality);
+  if (!name) return null;
+  return place({
+    name,
+    state: r.principalSubdivision,
+    country: r.countryName,
+    countryCode: r.countryCode,
+    lat,
+    lon,
+  });
 }

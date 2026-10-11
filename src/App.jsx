@@ -29,6 +29,7 @@ function App() {
     status,
     error,
     searchByCity,
+    searchByPlace,
     searchByCoords,
   } = useEnvironment();
 
@@ -68,7 +69,7 @@ function App() {
   }, [status, weather, rememberCity]);
 
   const handleSearch = (city) => searchByCity(city);
-  const handleSelectPlace = (place) => searchByCoords(place.lat, place.lon);
+  const handleSelectPlace = (place) => searchByPlace(place);
 
   const handleGeolocate = () => {
     if (!navigator.geolocation) {
@@ -179,12 +180,12 @@ function App() {
         <footer className="footer">
           <span>
             Data:{' '}
-            <a href="https://openweathermap.org/" target="_blank" rel="noreferrer">
-              OpenWeatherMap
-            </a>
-            ,{' '}
             <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">
               Open-Meteo
+            </a>
+            ,{' '}
+            <a href="https://www.bigdatacloud.com/" target="_blank" rel="noreferrer">
+              BigDataCloud
             </a>
             ,{' '}
             <a href="https://www.rainviewer.com/" target="_blank" rel="noreferrer">

@@ -55,7 +55,7 @@ const AirQuality = ({ airQuality }) => {
             {info.label}
           </span>
           <p className="air__message">{info.message}</p>
-          <p className="air__scale">OpenWeather index · 1 (Good) – 5 (Very Poor)</p>
+          <p className="air__scale">European AQI · 0 (Good) – 100+ (Extremely Poor)</p>
         </div>
       </div>
 
