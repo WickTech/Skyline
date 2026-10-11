@@ -37,6 +37,18 @@ export function weekday(dateOrUnix, { short = false } = {}) {
   return date.toLocaleDateString(undefined, { weekday: short ? 'short' : 'long' });
 }
 
+/**
+ * Weekday of a location-local calendar date ("2026-10-12"). Formatted in UTC
+ * on purpose: the date string is already in the location's timezone, and
+ * formatting a timestamp in the *browser's* zone can shift it by a day (e.g.
+ * Tokyo's Monday noon is still Sunday evening in New York).
+ */
+export function weekdayOfDate(isoDate, { short = false } = {}) {
+  const date = new Date(`${isoDate}T12:00:00Z`);
+  if (Number.isNaN(date.getTime())) return '—';
+  return date.toLocaleDateString(undefined, { weekday: short ? 'short' : 'long', timeZone: 'UTC' });
+}
+
 export function relativeTime(iso) {
   if (!iso) return '';
   const then = new Date(iso).getTime();

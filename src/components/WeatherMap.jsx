@@ -3,9 +3,9 @@ import { MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { OWM_LAYERS, owmTileUrl, getRainviewerTileUrl } from '../api/maps';
 
-// Interactive map: an OpenStreetMap base with a single toggleable overlay —
-// OpenWeather Weather Maps 1.0 layers (free `appid`) plus a keyless RainViewer
-// radar frame. Overlays are best-effort; a failed tile just shows the base map.
+// Interactive map: an OpenStreetMap base with a single toggleable overlay — a
+// keyless RainViewer radar frame, plus OpenWeather Weather Maps layers when the
+// optional key is set. Overlays are best-effort; a failed tile shows the base map.
 
 // Keeps the Leaflet view centred on the active location as searches change.
 function Recenter({ lat, lon }) {
@@ -38,7 +38,8 @@ const OVERLAYS = [
 ];
 
 const WeatherMap = ({ lat, lon }) => {
-  const [active, setActive] = useState('precipitation');
+  // Precipitation needs the optional OpenWeather key; radar is always keyless.
+  const [active, setActive] = useState(OWM_LAYERS.precipitation ? 'precipitation' : 'radar');
   const [radarUrl, setRadarUrl] = useState(null);
 
   useEffect(() => {

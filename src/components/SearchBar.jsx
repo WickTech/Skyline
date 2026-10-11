@@ -8,7 +8,7 @@ const SearchBar = ({ onSearch, onSelectPlace, onGeolocate, loading, geoLoading }
   const [open, setOpen] = useState(false);
   const boxRef = useRef(null);
 
-  // Debounced OpenWeather geocoding autocomplete. Best-effort — a failed lookup
+  // Debounced Open-Meteo geocoding autocomplete. Best-effort — a failed lookup
   // just leaves the free-text submit path intact.
   useEffect(() => {
     const q = value.trim();

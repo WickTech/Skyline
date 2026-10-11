@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FiAlertTriangle, FiChevronDown } from 'react-icons/fi';
 
-// Severe-weather alerts from OpenWeather One Call 3.0. Best-effort: when the
-// One Call subscription isn't enabled the list is empty and nothing renders.
+// Severe-weather alerts from OpenWeather One Call 3.0 — optional: without
+// VITE_OPENWEATHER_KEY the list is empty and nothing renders.
 const AlertItem = ({ alert }) => {
   const [open, setOpen] = useState(false);
   return (
