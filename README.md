@@ -10,6 +10,10 @@ an **hourly** and **5-day forecast**, **UV index**, **air quality**, severe-weat
 **alerts**, and an interactive **weather map** for that exact spot — all on a
 glassmorphic UI whose background reacts to the live weather.
 
+![Skyline showing London weather and air quality](docs/screenshot.png)
+
+**Live:** https://skyline-ten-jet.vercel.app
+
 > Skyline merges two earlier projects (WeatherNow + AirNow) into one product.
 > One lookup now answers both *"what's it like outside?"* and *"is the air clean?"*.
 
