@@ -1,7 +1,5 @@
 # Skyline 🌤️
 
-> **Archived.** A finished example, kept read-only: a keyless weather and air-quality dashboard (React, Vite, Open-Meteo). The live site keeps running. For my current frontend work see [Atlas](https://github.com/WickTech/Atlas).
-
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
